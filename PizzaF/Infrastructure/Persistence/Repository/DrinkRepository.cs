@@ -1,9 +1,7 @@
 ﻿using Application.Common.Extensions;
-using Application.Interface;
 using Application.Interface.Repository;
-using AutoMapper;
 using Domain.Entity;
-using Domain.Model.Pizza;
+using Domain.Model.Drink;
 using Infrastructure.Data;
 using System;
 using System.Collections.Generic;
@@ -14,16 +12,16 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repository
 {
-    public class PizzaRepository : GenericRepository<Pizza>, IPizzaRepository
+    public class DrinkRepository : GenericRepository<Drink>, IDrinkRepository
     {
-        public PizzaRepository(PizzaFDbContext context) : base(context)
+        public DrinkRepository(PizzaFDbContext context) : base(context)
         {
         }
 
-        public (Expression<Func<Pizza, bool>> filter, Func<IQueryable<Pizza>, IOrderedQueryable<Pizza>> orderBy) BuildFilterAndOrderBy(PizzaSearchModel searchModel)
+        public (Expression<Func<Drink, bool>> filter, Func<IQueryable<Drink>, IOrderedQueryable<Drink>> orderBy) BuildFilterAndOrderBy(DrinkSearchModel searchModel)
         {
-            Expression<Func<Pizza, bool>> filter = p => true;
-            Func<IQueryable<Pizza>, IOrderedQueryable<Pizza>> orderBy = null;
+            Expression<Func<Drink, bool>> filter = p => true;
+            Func<IQueryable<Drink>, IOrderedQueryable<Drink>> orderBy = null;
 
             if (searchModel.minPrice.HasValue)
             {
@@ -38,15 +36,15 @@ namespace Infrastructure.Persistence.Repository
                 filter = filter.And(p => p.Name.Contains(searchModel.name));
             }
 
-            if (searchModel.sortByPrice == true)
+            if(searchModel.sortByPrice == true)
             {
                 orderBy = p => searchModel.descending == true ?
                                p.OrderByDescending(x => x.Price) :
                                p.OrderBy(x => x.Price);
             }
+
             return (filter, orderBy);
         }
-
-
     }
+
 }

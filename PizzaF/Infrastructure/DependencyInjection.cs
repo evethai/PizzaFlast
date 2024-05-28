@@ -32,9 +32,11 @@ namespace Infrastructure
 
             //Declare Repository
             services.AddScoped<IPizzaRepository,PizzaRepository>();
+            services.AddScoped<IDrinkRepository, DrinkRepository>();
 
             //Declare Service
             services.AddScoped<IPizzaService, PizzaService>();
+            services.AddScoped<IDrinkService, DrinkService>();
 
             return services;
         }

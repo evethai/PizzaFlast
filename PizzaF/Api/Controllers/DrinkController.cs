@@ -1,37 +1,37 @@
 ﻿using Application.Interface.Service;
-using Domain.Model.Pizza;
+using Domain.Model.Drink;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("api/pizzas")]
+    [Route("api/drinks")]
     [ApiController]
-    public class PizzaController : ControllerBase
+    public class DrinkController : ControllerBase
     {
-        private readonly IPizzaService _pizzaService;
+        private readonly IDrinkService _drinkService;
 
-        public PizzaController(IPizzaService pizzaService)
+        public DrinkController(IDrinkService drinkService)
         {
-            _pizzaService = pizzaService;
+            _drinkService = drinkService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetListPizzaAsync([FromQuery] PizzaSearchModel searchModel)
+        public async Task<IActionResult> GetListDrinkAsync([FromQuery] DrinkSearchModel searchModel)
         {
-            var result = await _pizzaService.GetListPizzaAsync(searchModel);
+            var result = await _drinkService.GetListDrinkAsync(searchModel);
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPizzaByIdAsync(int id)
+        public async Task<IActionResult> GetDrinkByIdAsync(int id)
         {
-            var result = await _pizzaService.GetPizzaByIdAsync(id);
+            var result = await _drinkService.GetDrinkByIdAsync(id);
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePizzaAsync([FromForm] PizzaPostModel model)
+        public async Task<IActionResult> CreateDrinkAsync([FromForm] DrinkPostModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -39,7 +39,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _pizzaService.CreatePizzaAsync(model);
+                var result = await _drinkService.CreateDrinkAsync(model);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -49,7 +49,7 @@ namespace Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdatePizzaAsync([FromForm] PizzaPushModel model)
+        public async Task<IActionResult> UpdateDrinkAsync([FromForm] DrinkPushModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -57,7 +57,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _pizzaService.UpdatePizzaAsync(model);
+                var result = await _drinkService.UpdateDrinkAsync(model);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -65,5 +65,6 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
     }
 }

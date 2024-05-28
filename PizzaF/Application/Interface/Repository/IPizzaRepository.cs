@@ -1,5 +1,5 @@
 ﻿using Domain.Entity;
-using Domain.Model;
+using Domain.Model.Pizza;
 using System;
 using System.Collections.Generic;
 using System.Linq;

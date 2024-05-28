@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Entity;
-using Domain.Model;
+using Domain.Model.Drink;
+using Domain.Model.Pizza;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,15 @@ namespace Application.Common.Mapper
     {
         public AutoMapper()
         {
-            CreateMap<Pizza, PizzaListModel>().ReverseMap();
+            //Pizza
+            CreateMap<Pizza, PizzaModel>().ReverseMap();
+            CreateMap<Pizza, PizzaPostModel>().ReverseMap();
+            CreateMap<Pizza, PizzaPushModel>().ReverseMap();
+
+            //Drink
+            CreateMap<Drink, DrinkModel>().ReverseMap();
+            CreateMap<Drink, DrinkPostModel>().ReverseMap();
+            CreateMap<Drink, DrinkPushModel>().ReverseMap();
         }
     }
 }

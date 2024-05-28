@@ -10,6 +10,7 @@ namespace Application.Interface
     public interface IUnitOfWork : IDisposable
     {
         IPizzaRepository PizzaRepository { get; }
+        IDrinkRepository DrinkRepository { get; }
         int Save();
     }
 }

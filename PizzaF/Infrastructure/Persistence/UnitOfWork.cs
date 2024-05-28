@@ -14,7 +14,8 @@ namespace Infrastructure.Persistence
     public class UnitOfWork : IUnitOfWork
     {
         private readonly PizzaFDbContext _context;
-        private  PizzaRepository _pizzaRepository;
+        private PizzaRepository _pizzaRepository;
+        private DrinkRepository _drinkRepository;
 
         public UnitOfWork(PizzaFDbContext context)
         {
@@ -30,6 +31,18 @@ namespace Infrastructure.Persistence
                     _pizzaRepository = new PizzaRepository(_context);
                 }
                 return _pizzaRepository;
+            }
+        }
+
+        public IDrinkRepository DrinkRepository
+        {
+            get
+            {
+                if(_drinkRepository == null)
+                {
+                    _drinkRepository = new DrinkRepository(_context);
+                }
+                return _drinkRepository;
             }
         }
 
