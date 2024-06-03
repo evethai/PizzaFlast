@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Model.Pizza
+namespace Domain.Model.Size
 {
-    public class PizzaPushModel
+    public class SizePutModel
     {
         [Required(ErrorMessage = "Id is required.")]
         [FromForm(Name = "id")]
-        public int PizzaId { get; set; }
+        public int SizeId { get; set; }
         [Required(ErrorMessage = "Name is required.")]
         [FromForm(Name = "name")]
         public string Name { get; set; } = null!;
@@ -20,9 +20,6 @@ namespace Domain.Model.Pizza
         public string? Description { get; set; }
         [Required(ErrorMessage = "Price is required.")]
         [FromForm(Name = "price")]
-        [Range(0, double.MaxValue, ErrorMessage = "Price must be greater than 0")]
         public decimal Price { get; set; }
-        [FromForm(Name = "image")]
-        public string? Image { get; set; }
     }
 }

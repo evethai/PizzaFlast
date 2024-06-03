@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Model.Drink
 {
-    public class DrinkPushModel
+    public class DrinkPutModel
     {
         [Required(ErrorMessage = "Id is required.")]
         [FromForm(Name = "id")]

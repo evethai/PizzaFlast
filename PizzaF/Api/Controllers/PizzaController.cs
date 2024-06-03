@@ -49,7 +49,7 @@ namespace Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdatePizzaAsync([FromForm] PizzaPushModel model)
+        public async Task<IActionResult> UpdatePizzaAsync([FromForm] PizzaPutModel model)
         {
             if (!ModelState.IsValid)
             {

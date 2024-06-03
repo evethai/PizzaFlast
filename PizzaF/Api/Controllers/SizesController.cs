@@ -1,37 +1,37 @@
 ﻿using Application.Interface.Service;
-using Domain.Model.Drink;
+using Domain.Model.Size;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("api/drinks")]
+    [Route("api/sizes")]
     [ApiController]
-    public class DrinkController : ControllerBase
+    public class SizesController : ControllerBase
     {
-        private readonly IDrinkService _drinkService;
+        private readonly ISizeService _sizeService;
 
-        public DrinkController(IDrinkService drinkService)
+        public SizesController(ISizeService sizeService)
         {
-            _drinkService = drinkService;
+            _sizeService = sizeService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetListDrinkAsync([FromQuery] DrinkSearchModel searchModel)
+        public async Task<IActionResult> GetSizes()
         {
-            var result = await _drinkService.GetListDrinkAsync(searchModel);
+            var result = await _sizeService.GetSizes();
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetDrinkByIdAsync(int id)
+        public async Task<IActionResult> GetSizeById(int id)
         {
-            var result = await _drinkService.GetDrinkByIdAsync(id);
+            var result = await _sizeService.GetSizeById(id);
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateDrinkAsync([FromForm] DrinkPostModel model)
+        public async Task<IActionResult> CreateSize([FromForm] SizePostModel sizeModel)
         {
             if (!ModelState.IsValid)
             {
@@ -39,7 +39,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _drinkService.CreateDrinkAsync(model);
+                var result = await _sizeService.CreateSize(sizeModel);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -49,7 +49,7 @@ namespace Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateDrinkAsync([FromForm] DrinkPutModel model)
+        public async Task<IActionResult> UpdateSize([FromForm] SizePutModel sizeModel)
         {
             if (!ModelState.IsValid)
             {
@@ -57,7 +57,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _drinkService.UpdateDrinkAsync(model);
+                var result = await _sizeService.UpdateSize(sizeModel);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -66,5 +66,11 @@ namespace Api.Controllers
             }
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSize(int id)
+        {
+            var result = await _sizeService.DeleteSize(id);
+            return Ok(result);
+        }
     }
 }

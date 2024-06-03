@@ -30,7 +30,7 @@ namespace Infrastructure.Persistence.Service
             {
                 IsSuccess = true,
                 Message = "Drink created successfully.",
-                Data = result
+                Data = drink
             };
         }
 
@@ -56,7 +56,7 @@ namespace Infrastructure.Persistence.Service
             };
         }
 
-        public async Task<ResponseModel> UpdateDrinkAsync(DrinkPushModel model)
+        public async Task<ResponseModel> UpdateDrinkAsync(DrinkPutModel model)
         {
             var drink = _mapper.Map<Domain.Entity.Drink>(model);
             var result = await _unitOfWork.DrinkRepository.UpdateAsync(drink);
@@ -65,7 +65,7 @@ namespace Infrastructure.Persistence.Service
             {
                 IsSuccess = true,
                 Message = "Drink updated successfully.",
-                Data = result
+                Data = drink
             };
         }
     }

@@ -33,10 +33,20 @@ namespace Infrastructure
             //Declare Repository
             services.AddScoped<IPizzaRepository,PizzaRepository>();
             services.AddScoped<IDrinkRepository, DrinkRepository>();
+            services.AddScoped<ISizeRepository, SizeRepository>();
+            services.AddScoped<IToppingRepository, ToppingRepository>();
+            services.AddScoped<ICustomerPizzaRepository, CustomerPizzaRepository>();
+            services.AddScoped<ICustomerDrinkRepository, CustomerDrinkRepository>();
 
             //Declare Service
             services.AddScoped<IPizzaService, PizzaService>();
             services.AddScoped<IDrinkService, DrinkService>();
+            services.AddScoped<ISizeService, SizeService>();
+            services.AddScoped<IToppingService, ToppingService>();
+            services.AddScoped<ICustomerPizzaService, CustomerPizzaService>();
+            services.AddScoped<ICustomerDrinkService, CustomerDrinkService>();
+
+
 
             return services;
         }

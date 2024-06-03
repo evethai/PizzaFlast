@@ -31,7 +31,7 @@ namespace Infrastructure.Persistence.Service
             {
                 IsSuccess = true,
                 Message = "Pizza created successfully.",
-                Data = result
+                Data = pizza
             };
         }
 
@@ -56,7 +56,7 @@ namespace Infrastructure.Persistence.Service
             return result;
         }
 
-        public async Task<ResponseModel> UpdatePizzaAsync(PizzaPushModel model)
+        public async Task<ResponseModel> UpdatePizzaAsync(PizzaPutModel model)
         {
             var pizza = _mapper.Map<Pizza>(model);
             var result = await _unitOfWork.PizzaRepository.UpdateAsync(pizza);
@@ -65,7 +65,7 @@ namespace Infrastructure.Persistence.Service
             {
                 IsSuccess = true,
                 Message = "Pizza updated successfully.",
-                Data = result
+                Data = pizza
             };
         }
     }

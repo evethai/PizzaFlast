@@ -32,6 +32,5 @@ namespace Application.Interface
         );
         Task<IEnumerable<T>> GetAllAsync();
         Task<int> CountAsync(Expression<Func<T, bool>> filter = null);
-        IQueryable<T> GetQueryable();
     }
 }

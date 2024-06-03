@@ -1,13 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Domain.Model.Drink
+namespace Domain.Model.Pizza
 {
-    public class DrinkPostModel
+    public class PizzaPutModel
     {
+        [Required(ErrorMessage = "Id is required.")]
+        [FromForm(Name = "id")]
+        public int PizzaId { get; set; }
         [Required(ErrorMessage = "Name is required.")]
         [FromForm(Name = "name")]
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = null!;
         [FromForm(Name = "description")]
         public string? Description { get; set; }
         [Required(ErrorMessage = "Price is required.")]

@@ -13,6 +13,6 @@ namespace Application.Interface.Service
         Task<PizzaResponseModel> GetListPizzaAsync(PizzaSearchModel searchModel);
         Task<PizzaModel> GetPizzaByIdAsync(int pizzaId);
         Task<ResponseModel> CreatePizzaAsync(PizzaPostModel model);
-        Task<ResponseModel> UpdatePizzaAsync(PizzaPushModel model);
+        Task<ResponseModel> UpdatePizzaAsync(PizzaPutModel model);
     }
 }

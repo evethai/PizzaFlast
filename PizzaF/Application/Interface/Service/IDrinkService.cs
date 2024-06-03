@@ -13,6 +13,6 @@ namespace Application.Interface.Service
         Task<DrinkResponseModel> GetListDrinkAsync(DrinkSearchModel searchModel);
         Task<DrinkModel> GetDrinkByIdAsync(int DrinkId);
         Task<ResponseModel> CreateDrinkAsync(DrinkPostModel model);
-        Task<ResponseModel> UpdateDrinkAsync(DrinkPushModel model);
+        Task<ResponseModel> UpdateDrinkAsync(DrinkPutModel model);
     }
 }
