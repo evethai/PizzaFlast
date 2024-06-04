@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Enum;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,7 +18,7 @@ namespace Domain.Entity
         public string? LastName { get; set; }
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
-        public int Role { get; set; }
+        public UserRole Role { get; set; }
         public string? ProfilePic { get; set; }
         public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<Message> Messages { get; set; }

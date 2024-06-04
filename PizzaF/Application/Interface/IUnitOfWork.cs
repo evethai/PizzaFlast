@@ -15,6 +15,8 @@ namespace Application.Interface
         IToppingRepository ToppingRepository { get; }
         ICustomerPizzaRepository CustomerPizzaRepository { get; }
         ICustomerDrinkRepository CustomerDrinkRepository { get; }
+        IUserRepository UserRepository { get; }
+        IRefreshTokenRepository RefreshTokenRepository { get; }
 
         int Save();
     }

@@ -37,6 +37,8 @@ namespace Infrastructure
             services.AddScoped<IToppingRepository, ToppingRepository>();
             services.AddScoped<ICustomerPizzaRepository, CustomerPizzaRepository>();
             services.AddScoped<ICustomerDrinkRepository, CustomerDrinkRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             //Declare Service
             services.AddScoped<IPizzaService, PizzaService>();
@@ -45,6 +47,7 @@ namespace Infrastructure
             services.AddScoped<IToppingService, ToppingService>();
             services.AddScoped<ICustomerPizzaService, CustomerPizzaService>();
             services.AddScoped<ICustomerDrinkService, CustomerDrinkService>();
+            services.AddScoped<IUserService, UserService>();
 
 
 

@@ -1,5 +1,6 @@
 ﻿using Application.Interface;
 using Application.Interface.Repository;
+using AutoMapper;
 using Infrastructure.Data;
 using Infrastructure.Persistence.Repository;
 using System;
@@ -14,16 +15,20 @@ namespace Infrastructure.Persistence
     public class UnitOfWork : IUnitOfWork
     {
         private readonly PizzaFDbContext _context;
+        private readonly IMapper _mapper;
         private PizzaRepository _pizzaRepository;
         private DrinkRepository _drinkRepository;
         private SizeRepository _sizeRepository;
         private ToppingRepository _toppingRepository;
         private CustomerPizzaRepository _customerPizzaRepository;
         private CustomerDrinkRepository _customerDrinkRepository;
+        private UserRepository _userRepository;
+        private RefreshTokenRepository _refreshTokenRepository;
 
-        public UnitOfWork(PizzaFDbContext context)
+        public UnitOfWork(PizzaFDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public IPizzaRepository PizzaRepository
@@ -97,6 +102,31 @@ namespace Infrastructure.Persistence
                 return _customerDrinkRepository;
             }
         }
+
+        public IUserRepository UserRepository
+        {
+            get
+            {
+                if (_userRepository == null)
+                {
+                    _userRepository = new UserRepository(_context, _mapper);
+                }
+                return _userRepository;
+            }
+        }
+
+        public IRefreshTokenRepository RefreshTokenRepository
+        {
+            get
+            {
+                if (_refreshTokenRepository == null)
+                {
+                    _refreshTokenRepository = new RefreshTokenRepository(_context);
+                }
+                return _refreshTokenRepository;
+            }
+        }
+
         public int Save()
         {
             return _context.SaveChanges();

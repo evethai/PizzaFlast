@@ -6,6 +6,7 @@ using Domain.Model.Drink;
 using Domain.Model.Pizza;
 using Domain.Model.Size;
 using Domain.Model.Topping;
+using Domain.Model.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,11 @@ namespace Application.Common.Mapper
             CreateMap<CustomerDrink, CustomerDrinkModel>().ReverseMap();
             CreateMap<CustomerDrink, CustomerDrinkPostModel>().ReverseMap();
             CreateMap<CustomerDrink, CustomerDrinkPutModel>().ReverseMap();
+
+            //User
+            CreateMap<User, UserModel>().ReverseMap();
+            CreateMap<User, LoginModel>().ReverseMap();
+            CreateMap<User, RegisterModel>().ReverseMap();
 
         }
     }
