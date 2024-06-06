@@ -18,6 +18,8 @@ namespace Domain.Entity
         public string? LastName { get; set; }
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
+        public string? VerificationToken { get; set; }
+        public DateTime? VerifiedAt { get; set; }
         public UserRole Role { get; set; }
         public string? ProfilePic { get; set; }
         public virtual ICollection<Notification> Notifications { get; set; }

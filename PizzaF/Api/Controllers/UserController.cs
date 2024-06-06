@@ -1,4 +1,5 @@
 ﻿using Application.Interface.Service;
+using Domain.Model.Email;
 using Domain.Model.RefreshToken;
 using Domain.Model.User;
 using Microsoft.AspNetCore.Http;
@@ -11,10 +12,12 @@ namespace Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IEmailService _emailService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IEmailService emailService)
         {
             _userService = userService;
+            _emailService = emailService;
         }
 
         [HttpPost("login")]
@@ -31,8 +34,13 @@ namespace Api.Controllers
                 {
                     return Unauthorized("Invalid username or password");
                 }
-                
-                return Ok(result);
+                if (result.VerifiedAt == null)
+                {
+                    return BadRequest("Not verified!");
+                }
+                var acceptToken = await _userService.GenerateTokenString(result);
+                return Ok(acceptToken);
+
             }
             catch (Exception ex)
             {
@@ -51,9 +59,9 @@ namespace Api.Controllers
             try
             {
                 var result = await _userService.RegisterUser(model);
-                if (!result)
+                if (result == false)
                 {
-                    return BadRequest("Somethings is errror!");
+                    return BadRequest("Account with email has exited!!!");
                 }
                 return Ok("Register success");
             }
@@ -74,6 +82,42 @@ namespace Api.Controllers
                     return BadRequest(result.Message);
                 }
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("verify")]
+        public async Task<IActionResult> Verify(string token)
+        {
+            try
+            {
+                var result = await _userService.Verify(token);
+                if (result == false)
+                {
+                    return BadRequest("Token is invalid");
+                }
+                return Ok("User verified!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("send-mail-verify")]
+        public  async Task<IActionResult> SendMailToVerify(EmailModel model)
+        {
+            try
+            {
+                var result =  await _emailService.SendEmail(model);
+                if(result == false)
+                {
+                    return BadRequest("Send mail failed");
+                }
+                return Ok("Send mail success");
             }
             catch (Exception ex)
             {

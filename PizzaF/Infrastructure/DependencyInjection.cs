@@ -50,6 +50,10 @@ namespace Infrastructure
             services.AddScoped<IUserService, UserService>();
 
 
+            //Declare Email Service
+            services.AddTransient<IEmailService, EmailService>();
+
+
 
             return services;
         }

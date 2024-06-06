@@ -7,6 +7,7 @@ using Infrastructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace Infrastructure.Persistence.Repository
     {
         private readonly PizzaFDbContext _context;
         private readonly IMapper _mapper;
-        public UserRepository(PizzaFDbContext context,IMapper mapper) : base(context)
+        public UserRepository(PizzaFDbContext context, IMapper mapper) : base(context)
         {
             _context = context;
             _mapper = mapper;
@@ -27,26 +28,52 @@ namespace Infrastructure.Persistence.Repository
 
         public async Task<User> Login(LoginModel loginModel)
         {
-            var user =  _context.Users.Where(p => p.Email.Equals(loginModel.Email) &&
-            p.Password.Equals(loginModel.Password)).FirstOrDefault();
+            var user = _context.Users.Where(p => p.Email.Equals(loginModel.Email)).FirstOrDefault();
 
-            if (user == null)
+            bool isValidPassword = BCrypt.Net.BCrypt.Verify(loginModel.Password, user.Password);
+
+            if (user != null && isValidPassword)
             {
-                return null;
+                return user;
             }
 
-            return user;
+            return null;
         }
 
-        public async Task<User> RegisterUser(RegisterModel loginModel)
+        public async Task<bool> RegisterUser(RegisterModel loginModel)
         {
+            var userExist = _context.Users.Where(p => p.Email.Equals(loginModel.Email)).FirstOrDefault();
+            if (userExist != null)
+            {
+                return false;
+            }
+
             var user = _mapper.Map<User>(loginModel);
             user.Role = UserRole.User;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            user.VerificationToken = CreateRandomToken();
+
             _context.Users.Add(user);
             _context.SaveChanges();
 
-            return user;
+            return true;
+        }
 
+        public async Task<bool> Verify(string token)
+        {
+            var user = _context.Users.Where(p => p.VerificationToken.Equals(token)).FirstOrDefault();
+            if (user == null)
+            {
+                return false;
+            }
+            user.VerifiedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        private string CreateRandomToken()
+        {
+            return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
         }
 
     }

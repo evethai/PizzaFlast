@@ -80,31 +80,28 @@ namespace Infrastructure.Persistence.Service
             return Convert.ToBase64String(randomNumber);
         }
 
-        public async Task<ResponseTokenModel> Login(LoginModel model)
+        public async Task<UserModel> Login(LoginModel model)
         {
             var user = _unitOfWork.UserRepository.Login(model);
-            if (user == null)
+            if (user.Result == null)
             {
                 return null;
             }
             var result = _mapper.Map<UserModel>(user.Result);
-
-            var token = await GenerateTokenString(result);
-
-
-            return token;
+            return result;
         }
 
 
 
         public async Task<bool> RegisterUser(RegisterModel model)
         {
-            var user = _unitOfWork.UserRepository.RegisterUser(model);
-            if (user == null)
+            var user = await _unitOfWork.UserRepository.RegisterUser(model);
+            if(user == false )
             {
                 return false;
             }
             return true;
+
         }
 
         public async Task<RefreshTokenModel> CreateRefreshToken(ResponseTokenModel model)
@@ -227,6 +224,16 @@ namespace Infrastructure.Persistence.Service
             var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             dateTime = dateTime.AddSeconds(unixTime).ToUniversalTime();
             return dateTime;
+        }
+
+        public async Task<bool> Verify(string token)
+        {
+            var isVerify = await _unitOfWork.UserRepository.Verify(token);
+            if(isVerify == false)
+            {
+               return false;
+            }
+            return true;
         }
     }
 

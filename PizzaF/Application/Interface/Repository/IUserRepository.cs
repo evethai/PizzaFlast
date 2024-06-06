@@ -12,6 +12,7 @@ namespace Application.Interface.Repository
     {
 
         Task<User> Login(LoginModel loginModel);
-        Task<User> RegisterUser(RegisterModel loginModel);
+        Task<bool> RegisterUser(RegisterModel loginModel);
+        Task<bool> Verify(string token);
     }
 }

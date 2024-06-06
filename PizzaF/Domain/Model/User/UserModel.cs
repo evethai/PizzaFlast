@@ -13,6 +13,8 @@ namespace Domain.Model.User
         public string? LastName { get; set; }
         public string Email { get; set; } = null!;
         public int Role { get; set; }
+        public string? VerificationToken { get; set; }
+        public DateTime? VerifiedAt { get; set; }
     }
 
 
