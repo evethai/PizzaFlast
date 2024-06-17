@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("api/cus-pizza")]
+    [Route("api/cus-pizzas")]
     [ApiController]
     public class CustomerPizzaController : ControllerBase
     {
@@ -30,23 +30,23 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateCustomerPizza([FromForm] CustomerPizzaPostModel customerPizzaModel)
-        {
-            if(!ModelState.IsValid)
-            {
-                return base.BadRequest(ModelState);
-            }
-            try
-            {
-                var result = await _customerPizzaService.CreateCustomerPizza(customerPizzaModel);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> CreateCustomerPizza([FromForm] CustomerPizzaPostModel customerPizzaModel)
+        //{
+        //    if(!ModelState.IsValid)
+        //    {
+        //        return base.BadRequest(ModelState);
+        //    }
+        //    try
+        //    {
+        //        var result = await _customerPizzaService.CreateCustomerPizza(customerPizzaModel);
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
 
         [HttpPut]
         public async Task<IActionResult> UpdateCustomerPizza([FromForm] CustomerPizzaPutModel customerPizzaModel)

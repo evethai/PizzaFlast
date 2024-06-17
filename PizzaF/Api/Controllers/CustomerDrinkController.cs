@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("api/cus-drink")]
+    [Route("api/cus-drinks")]
     [ApiController]
     public class CustomerDrinkController : ControllerBase
     {
@@ -30,23 +30,23 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateCustomerDrink([FromForm] CustomerDrinkPostModel customerDrinkModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            try
-            {
-                var result = await _customerDrinkService.CreateCustomerDrink(customerDrinkModel);
-                return Ok(result);
-            }
-            catch (System.Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> CreateCustomerDrink([FromForm] CustomerDrinkPostModel customerDrinkModel)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    try
+        //    {
+        //        var result = await _customerDrinkService.CreateCustomerDrink(customerDrinkModel);
+        //        return Ok(result);
+        //    }
+        //    catch (System.Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
 
         [HttpPut]
         public async Task<IActionResult> UpdateCustomerDrink([FromForm] CustomerDrinkPutModel customerDrinkModel)

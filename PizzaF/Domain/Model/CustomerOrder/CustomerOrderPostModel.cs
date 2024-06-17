@@ -16,10 +16,8 @@ namespace Domain.Model.CustomerOrder
         [FromForm(Name = "user-id")]
         public int UserId { get; set; }
         [FromForm(Name = "list-customer-pizza")]
-        public List<CustomerPizzaModel> customerPizzas { get; set; }
+        public List<CustomerPizzaPostModel>? customerPizzas { get; set; } = new List<CustomerPizzaPostModel>();
         [FromForm(Name = "list-customer-drink")]
-        public List<CustomerDrinkModel> customerDrinks { get; set; }
-        [FromForm(Name = "total-amount")]
-        public decimal TotalAmount { get; set; }
+        public List<CustomerDrinkPostModel>? customerDrinks { get; set; } = new List<CustomerDrinkPostModel>();
     }
 }

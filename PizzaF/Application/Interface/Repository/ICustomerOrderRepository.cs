@@ -1,4 +1,5 @@
 ﻿using Domain.Entity;
+using Domain.Model.CustomerOrder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,7 @@ namespace Application.Interface.Repository
 {
     public interface ICustomerOrderRepository: IGenericRepository<CustomerOrder>
     {
+        Task<CustomerOrderModel> CreateCustomerOrder(CustomerOrderPostModel customerOrder);
+        Task<BillModel> GetCustomerOrderById(int id);
     }
 }

@@ -27,5 +27,20 @@ namespace Infrastructure.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CustomerDrink>()
+                .HasOne(cd => cd.CustomerOrder)
+                .WithMany(co => co.CustomerDrinks)
+                .HasForeignKey(cd => cd.OrderId);
+
+            modelBuilder.Entity<CustomerPizza>()
+                .HasOne(cp => cp.CustomerOrder)
+                .WithMany(co => co.CustomerPizzas)
+                .HasForeignKey(cp => cp.OrderId);
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

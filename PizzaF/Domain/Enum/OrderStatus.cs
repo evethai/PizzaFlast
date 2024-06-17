@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Interface.Service
+namespace Domain.Enum
 {
-    public interface ICustomOrderService
+    public enum OrderStatus
     {
-        Task<int> CreateOrder(int customerId);
+        Processing = 1,
+        Completed = 2,
+        Cancelled = 3
     }
 }

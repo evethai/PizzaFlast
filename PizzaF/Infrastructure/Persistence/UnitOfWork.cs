@@ -147,7 +147,7 @@ namespace Infrastructure.Persistence
             {
                 if (_customerOrderRepository == null)
                 {
-                    _customerOrderRepository = new CustomerOrderRepository(_context);
+                    _customerOrderRepository = new CustomerOrderRepository(_context, _mapper);
                 }
                 return _customerOrderRepository;
             }

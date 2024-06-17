@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(PizzaFDbContext))]
-    partial class PizzaFDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240617133442_update-price")]
+    partial class updateprice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,6 +33,9 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CustomerOrderOrderId")
+                        .HasColumnType("int");
+
                     b.Property<int>("DrinkId")
                         .HasColumnType("int");
 
@@ -44,9 +50,9 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DrinkId");
+                    b.HasIndex("CustomerOrderOrderId");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("DrinkId");
 
                     b.ToTable("CustomerDrinks");
                 });
@@ -86,6 +92,9 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CustomerOrderOrderId")
+                        .HasColumnType("int");
+
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
@@ -106,7 +115,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("CustomerOrderOrderId");
 
                     b.HasIndex("PizzaId");
 
@@ -377,15 +386,15 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.CustomerDrink", b =>
                 {
-                    b.HasOne("Domain.Entity.Drink", "Drink")
+                    b.HasOne("Domain.Entity.CustomerOrder", "CustomerOrder")
                         .WithMany("CustomerDrinks")
-                        .HasForeignKey("DrinkId")
+                        .HasForeignKey("CustomerOrderOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entity.CustomerOrder", "CustomerOrder")
+                    b.HasOne("Domain.Entity.Drink", "Drink")
                         .WithMany("CustomerDrinks")
-                        .HasForeignKey("OrderId")
+                        .HasForeignKey("DrinkId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -409,7 +418,7 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entity.CustomerOrder", "CustomerOrder")
                         .WithMany("CustomerPizzas")
-                        .HasForeignKey("OrderId")
+                        .HasForeignKey("CustomerOrderOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

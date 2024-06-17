@@ -18,9 +18,9 @@ namespace Domain.Model.CustomerOrder
         [JsonPropertyName("order-date")]
         public DateTime OrderDate { get; set; }
         [JsonPropertyName("customer-pizzas")]
-        public List<CustomerPizzaModel> customerPizzas { get; set; }
+        public List<CustomerPizzaPostModel> customerPizzas { get; set; }
         [JsonPropertyName("customer-drinks")]
-        public List<CustomerDrinkModel> customerDrinks { get; set; }
+        public List<CustomerDrinkPostModel> customerDrinks { get; set; }
         [JsonPropertyName("total-amount")]
         public decimal TotalAmount { get; set; }
     }

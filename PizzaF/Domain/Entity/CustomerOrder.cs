@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Enum;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,7 +17,7 @@ namespace Domain.Entity
         public int UserId { get; set; }
         public decimal TotalAmount { get; set; }
         public DateTime OrderDate { get; set; }
-        public int Status { get; set; }
+        public OrderStatus Status { get; set; }
         public User User { get; set; }
         public virtual ICollection<CustomerDrink> CustomerDrinks { get; set; } = null!;
         public virtual ICollection<CustomerPizza> CustomerPizzas { get; set; } = null!;
