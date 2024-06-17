@@ -19,5 +19,12 @@ namespace Domain.Model.CustomerPizza
         [Required(ErrorMessage = "SizeId is required.")]
         [FromForm(Name = "sizeId")]
         public int SizeId { get; set; }
+        [Required(ErrorMessage = "ToppingId is required.")]
+        [FromForm(Name = "toppingId")]
+        public int ToppingId { get; set; }
+        [Required(ErrorMessage = "Quantity is required.")]
+        [FromForm(Name = "quantity")]
+        public int Quantity { get; set; }
+
     }
 }

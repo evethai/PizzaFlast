@@ -15,6 +15,8 @@ namespace Domain.Model.CustomerDrink
         public int DrinkId { get; set; }
         [JsonPropertyName("order-id")]
         public int OrderId { get; set; }
+        [JsonPropertyName("quantity")]
+        public int Quantity { get; set; }
     }
 
     public class CustomerDrinkResponseModel

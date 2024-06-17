@@ -1,4 +1,5 @@
-﻿using Domain.Model.RefreshToken;
+﻿using Domain.Model;
+using Domain.Model.RefreshToken;
 using Domain.Model.User;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace Application.Interface.Service
         Task<bool> RegisterUser(RegisterModel model);
         Task<RefreshTokenModel> CreateRefreshToken(ResponseTokenModel model);
         Task<bool> Verify (string token);
+        Task<ProfileModel> GetUserProfile(int id);
+        Task<ResponseModel> UpdateProfile(ProfilePutModel model);
 
     }
 }

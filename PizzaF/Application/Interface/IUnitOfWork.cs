@@ -17,6 +17,8 @@ namespace Application.Interface
         ICustomerDrinkRepository CustomerDrinkRepository { get; }
         IUserRepository UserRepository { get; }
         IRefreshTokenRepository RefreshTokenRepository { get; }
+        IMessageRepository MessageRepository { get; }
+        ICustomerOrderRepository CustomerOrderRepository { get; }
 
         int Save();
     }

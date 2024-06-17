@@ -17,6 +17,10 @@ namespace Domain.Model.CustomerPizza
         public int PizzaId { get; set; }
         [JsonPropertyName("size-id")]
         public int SizeId { get; set; }
+        [JsonPropertyName("topping-id")]
+        public int ToppingId { get; set; }
+        [JsonPropertyName("quantity")]
+        public int Quantity { get; set; }
     }
 
     public class CustomerPizzaResponseModel

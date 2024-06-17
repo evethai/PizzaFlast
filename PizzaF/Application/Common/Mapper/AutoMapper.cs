@@ -3,6 +3,7 @@ using Domain.Entity;
 using Domain.Model.CustomerDrink;
 using Domain.Model.CustomerPizza;
 using Domain.Model.Drink;
+using Domain.Model.Messages;
 using Domain.Model.Pizza;
 using Domain.Model.Size;
 using Domain.Model.Topping;
@@ -53,6 +54,11 @@ namespace Application.Common.Mapper
             CreateMap<User, UserModel>().ReverseMap();
             CreateMap<User, LoginModel>().ReverseMap();
             CreateMap<User, RegisterModel>().ReverseMap();
+            CreateMap<User, ProfileModel>().ReverseMap();
+            CreateMap<User, ProfilePutModel>().ReverseMap();
+
+            //Message
+            CreateMap<Message, MessageModel>().ReverseMap();
 
         }
     }

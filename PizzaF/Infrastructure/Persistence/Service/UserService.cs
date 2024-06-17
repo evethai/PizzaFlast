@@ -2,6 +2,7 @@
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entity;
+using Domain.Model;
 using Domain.Model.RefreshToken;
 using Domain.Model.User;
 using Microsoft.Extensions.Configuration;
@@ -234,6 +235,26 @@ namespace Infrastructure.Persistence.Service
                return false;
             }
             return true;
+        }
+
+        public async Task<ProfileModel> GetUserProfile(int id)
+        {
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+            var result = _mapper.Map<ProfileModel>(user);
+
+            return result;
+        }
+
+        public async Task<ResponseModel> UpdateProfile(ProfilePutModel model)
+        {   
+            var result = await _unitOfWork.UserRepository.UpdateUserProfile(model);
+            var user = _mapper.Map<ProfileModel>(result);
+            return new ResponseModel
+            {
+                IsSuccess = true,
+                Message = "Profile updated successfully.",
+                Data = user
+            };
         }
     }
 

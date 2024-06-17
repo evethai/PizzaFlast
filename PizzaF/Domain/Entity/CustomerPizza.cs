@@ -16,6 +16,8 @@ namespace Domain.Entity
         public int OrderId { get; set; }
         public int PizzaId { get; set; }
         public int SizeId { get; set; }
+        public int ToppingId { get; set; }
+        public int Quantity { get; set; }
         public CustomerOrder CustomerOrder { get; set; }
         public Pizza Pizza { get; set; }
         public Size Size { get; set; }

@@ -16,5 +16,8 @@ namespace Domain.Model.CustomerDrink
         [Required(ErrorMessage = "OrderId is required.")]
         [FromForm(Name = "order-id")]
         public int OrderId { get; set; }
+        [Required(ErrorMessage = "Quantity is required.")]
+        [FromForm(Name = "quantity")]
+        public int Quantity { get; set; }
     }
 }

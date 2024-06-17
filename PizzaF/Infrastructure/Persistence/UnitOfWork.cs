@@ -24,6 +24,8 @@ namespace Infrastructure.Persistence
         private CustomerDrinkRepository _customerDrinkRepository;
         private UserRepository _userRepository;
         private RefreshTokenRepository _refreshTokenRepository;
+        private MessageRepository _messageRepository;
+        private CustomerOrderRepository _customerOrderRepository;
 
         public UnitOfWork(PizzaFDbContext context, IMapper mapper)
         {
@@ -124,6 +126,30 @@ namespace Infrastructure.Persistence
                     _refreshTokenRepository = new RefreshTokenRepository(_context);
                 }
                 return _refreshTokenRepository;
+            }
+        }
+
+        public IMessageRepository MessageRepository
+        {
+            get
+            {
+                if (_messageRepository == null)
+                {
+                    _messageRepository = new MessageRepository(_context);
+                }
+                return _messageRepository;
+            }
+        }
+
+        public ICustomerOrderRepository CustomerOrderRepository
+        {
+            get
+            {
+                if (_customerOrderRepository == null)
+                {
+                    _customerOrderRepository = new CustomerOrderRepository(_context);
+                }
+                return _customerOrderRepository;
             }
         }
 

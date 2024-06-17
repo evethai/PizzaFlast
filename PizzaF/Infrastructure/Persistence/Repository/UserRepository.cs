@@ -59,6 +59,18 @@ namespace Infrastructure.Persistence.Repository
             return true;
         }
 
+        public async Task<User> UpdateUserProfile(ProfilePutModel model)
+        {
+            var user =  _context.Users.Where(p => p.UserId.Equals(model.UserId)).FirstOrDefault();
+            if (user != null)
+            {
+                user = _mapper.Map(model, user);
+                _context.SaveChanges();
+                return user;
+            }
+            return null;
+        }
+
         public async Task<bool> Verify(string token)
         {
             var user = _context.Users.Where(p => p.VerificationToken.Equals(token)).FirstOrDefault();
