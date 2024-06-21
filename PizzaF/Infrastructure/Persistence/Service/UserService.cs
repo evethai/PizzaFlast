@@ -34,7 +34,7 @@ namespace Infrastructure.Persistence.Service
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                 new Claim(ClaimTypes.Email, model.Email),
-                new Claim(ClaimTypes.Email, model.Email),
+                new Claim(ClaimTypes.NameIdentifier, model.UserId.ToString()),
                 new Claim(ClaimTypes.Role,model.Role.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),

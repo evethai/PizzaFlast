@@ -29,12 +29,13 @@ namespace Infrastructure.Persistence.Repository
         public async Task<User> Login(LoginModel loginModel)
         {
             var user = _context.Users.Where(p => p.Email.Equals(loginModel.Email)).FirstOrDefault();
-
-            bool isValidPassword = BCrypt.Net.BCrypt.Verify(loginModel.Password, user.Password);
-
-            if (user != null && isValidPassword)
+            if (user != null )
             {
-                return user;
+                bool isValidPassword = BCrypt.Net.BCrypt.Verify(loginModel.Password, user.Password);
+                if(isValidPassword)
+                {
+                    return user;
+                }
             }
 
             return null;
