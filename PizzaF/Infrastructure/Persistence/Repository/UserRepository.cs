@@ -40,6 +40,19 @@ namespace Infrastructure.Persistence.Repository
             return null;
         }
 
+        public async Task<bool> Logout(string token)
+        {
+            var refreshToken = _context.RefreshTokens.Where(p => p.Token.Equals(token)).FirstOrDefault();
+            if (refreshToken == null)
+            {
+                return false;
+            }
+            refreshToken.IsRevoked = true;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+
         public async Task<bool> RegisterUser(RegisterModel loginModel)
         {
             var userExist = _context.Users.Where(p => p.Email.Equals(loginModel.Email)).FirstOrDefault();

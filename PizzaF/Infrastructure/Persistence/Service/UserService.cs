@@ -92,7 +92,15 @@ namespace Infrastructure.Persistence.Service
             return result;
         }
 
-
+        public async Task<bool> Logout(string token)
+        {
+            var logout = await _unitOfWork.UserRepository.Logout(token);
+            if (logout == false)
+            {
+                return false;
+            }
+            return true;
+        }
 
         public async Task<bool> RegisterUser(RegisterModel model)
         {

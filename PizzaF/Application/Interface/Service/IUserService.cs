@@ -18,6 +18,7 @@ namespace Application.Interface.Service
         Task<bool> Verify (string token);
         Task<ProfileModel> GetUserProfile(int id);
         Task<ResponseModel> UpdateProfile(ProfilePutModel model);
+        Task<bool> Logout(string token);
 
     }
 }

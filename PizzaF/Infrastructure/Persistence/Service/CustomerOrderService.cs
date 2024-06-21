@@ -1,6 +1,7 @@
 ﻿using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
+using Domain.Enum;
 using Domain.Model;
 using Domain.Model.CustomerOrder;
 using System;
@@ -28,7 +29,7 @@ namespace Infrastructure.Persistence.Service
             {
                 Message = "Order created successfully",
                 IsSuccess = true,
-                Data = order
+                Data = order.OrderId
             };
         }
 
@@ -36,6 +37,28 @@ namespace Infrastructure.Persistence.Service
         {
             var bill = _unitOfWork.CustomerOrderRepository.GetCustomerOrderById(id);
             return bill;
+        }
+
+        public async Task<ResponseModel> UpdateOrder(int orderId, OrderStatus status)
+        {
+            var order = await _unitOfWork.CustomerOrderRepository.GetByIdAsync(orderId);
+            if (order != null)
+            {
+                order.Status = status;
+                await _unitOfWork.CustomerOrderRepository.UpdateAsync(order);
+                _unitOfWork.Save();
+                return new ResponseModel
+                {
+                    Message = "Order updated successfully",
+                    IsSuccess = true,
+                    Data = order.OrderId
+                };
+            }
+            return new ResponseModel
+            {
+                Message = "Order not found",
+                IsSuccess = false
+            };
         }
     }
 }

@@ -156,5 +156,24 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        //logout
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout(string token)
+        {
+            try
+            {
+                var result = await _userService.Logout(token);
+                if (!result)
+                {
+                    return BadRequest("token is not valid");
+                }
+                return Ok("Logout successful!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Domain.Model;
+﻿using Domain.Enum;
+using Domain.Model;
 using Domain.Model.CustomerOrder;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,6 @@ namespace Application.Interface.Service
     {
         Task<ResponseModel> CreateOrder(CustomerOrderPostModel model);
         Task<BillModel> GetBillByOrderId(int id);
+        Task<ResponseModel> UpdateOrder(int orderId, OrderStatus status);
     }
 }

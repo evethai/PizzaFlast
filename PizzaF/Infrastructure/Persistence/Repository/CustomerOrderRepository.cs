@@ -80,31 +80,6 @@ namespace Infrastructure.Persistence.Repository
         {
             try
             {
-                //var bill = _context.CustomerOrders
-                //.Where(order => order.OrderId == id)
-                //.Select(order => new BillModel
-                //{
-                //    UserName = order.User.FirstName,
-                //    DateTime = order.OrderDate,
-                //    TotalPrice = order.TotalAmount,
-                //    BillDetails = order.CustomerPizzas.Select(pizza => new BillDetailModel
-                //    {
-                //        Name = pizza.Pizza.Name + " " + pizza.Size.Name + " " + pizza.Topping.Name,
-                //        Quantity = pizza.Quantity,
-                //        Price = pizza.Price
-                //    })
-                //    .Union(order.CustomerDrinks.Select(drink => new BillDetailModel
-                //    {
-                //        Name = drink.Drink.Name,
-                //        Quantity = drink.Quantity,
-                //        Price = drink.Price
-                //    }))
-                //    .ToList()
-                //})
-                //.FirstOrDefault();
-
-                //return bill ?? new BillModel();
-
                 var order = _context.CustomerOrders
                     .Include(o => o.User)
                     .Include(o => o.CustomerPizzas)

@@ -1,5 +1,6 @@
 ﻿using Application.Interface.Service;
 using Domain.Model.Drink;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace Api.Controllers
             _drinkService = drinkService;
         }
 
+        [Authorize(Roles = "2")]
         [HttpGet]
         public async Task<IActionResult> GetListDrinkAsync([FromQuery] DrinkSearchModel searchModel)
         {

@@ -1,4 +1,5 @@
 ﻿using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.CustomerOrder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,20 @@ namespace Api.Controllers
             try
             {
                 var result = await _customerOrderService.GetBillByOrderId(id);
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCustomerOrder(int id, [FromForm] OrderStatus status)
+        {
+            try
+            {
+                var result = await _customerOrderService.UpdateOrder(id, status);
                 return Ok(result);
             }
             catch (System.Exception ex)
