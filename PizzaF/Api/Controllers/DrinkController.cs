@@ -15,7 +15,7 @@ namespace Api.Controllers
         {
             _drinkService = drinkService;
         }
-
+        //k
         [HttpGet]
         public async Task<IActionResult> GetListDrinkAsync([FromQuery] DrinkSearchModel searchModel)
         {
