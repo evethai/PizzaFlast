@@ -1,6 +1,7 @@
 ﻿using Application.Interface.Repository;
 using Domain.Entity;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,15 @@ namespace Infrastructure.Persistence.Repository
                 return null;
             }
             return token;
+        }
+        public async Task<RefreshToken> GetByJwtIdAsync(string jwtId)
+        {
+            return await _context.RefreshTokens.FirstOrDefaultAsync(rt => rt.JwtId.Equals(jwtId));
+        }
+
+        public async Task<bool> IsTokenRevokedAsync(string jwtId)
+        {
+            return await _context.RefreshTokens.AnyAsync(rt => rt.JwtId == jwtId && rt.IsRevoked == false);
         }
     }
 

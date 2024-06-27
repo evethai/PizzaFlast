@@ -41,28 +41,15 @@ namespace Infrastructure.Persistence.Repository
             return null;
         }
 
-        public async Task<bool> Logout(string token)
+        public async Task<bool> RegisterUser(RegisterModel registerModel)
         {
-            var refreshToken = _context.RefreshTokens.Where(p => p.Token.Equals(token)).FirstOrDefault();
-            if (refreshToken == null)
-            {
-                return false;
-            }
-            refreshToken.IsRevoked = true;
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-
-        public async Task<bool> RegisterUser(RegisterModel loginModel)
-        {
-            var userExist = _context.Users.Where(p => p.Email.Equals(loginModel.Email)).FirstOrDefault();
+            var userExist = _context.Users.Where(p => p.Email.Equals(registerModel.Email)).FirstOrDefault();
             if (userExist != null)
             {
                 return false;
             }
 
-            var user = _mapper.Map<User>(loginModel);
+            var user = _mapper.Map<User>(registerModel);
             user.Role = UserRole.User;
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             user.VerificationToken = CreateRandomToken();

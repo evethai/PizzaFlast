@@ -113,7 +113,7 @@ namespace Infrastructure.Persistence.Repository
 
                 var bill = new BillModel
                 {
-                    UserName = order.User.FirstName,
+                    UserName = order.User.Name,
                     DateTime = order.OrderDate,
                     TotalPrice = order.TotalAmount,
                     BillDetails = billDetails

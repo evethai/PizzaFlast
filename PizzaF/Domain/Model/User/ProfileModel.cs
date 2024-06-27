@@ -11,10 +11,8 @@ namespace Domain.Model.User
 {
     public class ProfileModel
     {
-        [JsonPropertyName("first-name")]
-        public string? FirstName { get; set; }
-        [JsonPropertyName("last-name")]
-        public string? LastName { get; set; }
+        [JsonPropertyName("name")]
+        public string? Name { get; set; }
         [JsonPropertyName("date-of-birth")]
         public DateTime DateOfBirth { get; set; }
         [JsonPropertyName("address")]
@@ -31,10 +29,9 @@ namespace Domain.Model.User
         [Required(ErrorMessage = "Id is required.")]
         [FromForm(Name = "id")]
         public int UserId { get; set; }
-        [FromForm(Name = "first_name")]
-        public string? FirstName { get; set; }
-        [FromForm(Name = "last_name")]
-        public string? LastName { get; set; }
+        [FromForm(Name = "name")]
+        public string? Name { get; set; }
+
         [FromForm(Name = "date_of_birth")]
         [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }

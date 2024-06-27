@@ -92,15 +92,41 @@ namespace Infrastructure.Persistence.Service
             return result;
         }
 
-        public async Task<bool> Logout(string token)
+        public async Task<RefreshTokenModel> RevokeToken(string token)
         {
-            var logout = await _unitOfWork.UserRepository.Logout(token);
-            if (logout == false)
+            var (principal, jwtSecurityToken, errorMessage) = ValidateToken(token);
+            if (principal == null)
             {
-                return false;
+                return new RefreshTokenModel
+                {
+                    IsSuccess = false,
+                    Message = errorMessage
+                };
             }
-            return true;
+
+            var jti = principal.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
+
+            var refreshToken = await _unitOfWork.RefreshTokenRepository.GetByJwtIdAsync(jti);
+            if (refreshToken == null)
+            {
+                return new RefreshTokenModel
+                {
+                    IsSuccess = false,
+                    Message = "Refresh token not found"
+                };
+            }
+
+            refreshToken.IsRevoked = true;
+            await _unitOfWork.RefreshTokenRepository.UpdateAsync(refreshToken);
+            _unitOfWork.Save();
+
+            return new RefreshTokenModel
+            {
+                IsSuccess = true,
+                Message = "Token has been revoked"
+            };
         }
+
 
         public async Task<bool> RegisterUser(RegisterModel model)
         {
@@ -115,124 +141,84 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<RefreshTokenModel> CreateRefreshToken(ResponseTokenModel model)
         {
-            var jwtTokenHandler = new JwtSecurityTokenHandler();
-            var secretKeyBytes = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
-            var paramTokenValid = new TokenValidationParameters
+            var (principal, jwtSecurityToken, errorMessage) = ValidateToken(model.Token);
+            if (principal == null)
             {
-                ValidateIssuer = false,
-                ValidateAudience = false,
-
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("Jwt:Key").Value)),
-
-                ClockSkew = TimeSpan.Zero,
-                ValidateLifetime = false
-            };
-            try
-            {
-                //check 1: accept token is valid
-                var principal = jwtTokenHandler.ValidateToken(model.Token, paramTokenValid, out var securityToken);
-
-                //check 2: alg
-                if (securityToken is JwtSecurityToken jwtSecurityToken)
-                {
-                    var result = jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase);
-                    if (!result)
-                    {
-                        return new RefreshTokenModel
-                        {
-                            IsSuccess = false,
-                            Message = "Invalid alg token"
-                        };
-                    }
-                }
-
-                //check 3: check accept token expired?
-                var expiryDateUnix = long.Parse(principal.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Exp).Value);
-                var expiryDateTimeUtc = ConvertUnixTimeToDateTime(expiryDateUnix);
-                if (expiryDateTimeUtc > DateTime.UtcNow)
-                {
-                    return new RefreshTokenModel
-                    {
-                        IsSuccess = false,
-                        Message = "This token hasn't expired yet"
-                    };
-                }
-
-                //check 4: check refresh token exited in DB
-                var exitedToke = await _unitOfWork.RefreshTokenRepository.ExitedToken(model.RefreshToken);
-                if (exitedToke == null)
-                {
-                    return new RefreshTokenModel
-                    {
-                        IsSuccess = false,
-                        Message = "This refresh token is not exited"
-                    };
-                }
-
-                //check 5: check refresh token is used/revoked?
-                if(exitedToke.IsUsed)
-                {
-                    return new RefreshTokenModel
-                    {
-                        IsSuccess = false,
-                        Message = "Refresh token has been used"
-                    };
-                }
-                if (exitedToke.IsRevoked)
-                {
-                    return new RefreshTokenModel
-                    {
-                        IsSuccess = false,
-                        Message = "Refresh token has been revoked"
-                    };
-                }
-
-                //check 6: check Accept id equal jwtId in stored
-                var jti = principal.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
-                if (exitedToke.JwtId != jti)
-                {
-                    return new RefreshTokenModel
-                    {
-                        IsSuccess = false,
-                        Message = "This refresh token does not match this JWT token"
-                    };
-                }
-
-                //update token is used
-                exitedToke.IsRevoked = true;
-                exitedToke.IsUsed = true;
-                await _unitOfWork.RefreshTokenRepository.UpdateAsync(exitedToke);
-                _unitOfWork.Save();
-
-                //create new refresh token
-                var user = await _unitOfWork.UserRepository.GetByIdAsync(exitedToke.UserId);
-                var mapperUser = _mapper.Map<UserModel>(user);
-                var newToken = await GenerateTokenString(mapperUser);
-
-
                 return new RefreshTokenModel
                 {
-                    IsSuccess = true,
-                    Message = "Create new token success"
+                    IsSuccess = false,
+                    Message = errorMessage
                 };
-
-
             }
-            catch (Exception ex)
+
+            var expiryDateUnix = long.Parse(principal.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Exp).Value);
+            var expiryDateTimeUtc = ConvertUnixTimeToDateTime(expiryDateUnix);
+            if (expiryDateTimeUtc > DateTime.UtcNow)
             {
-               return new RefreshTokenModel
-               {
-                   IsSuccess = false,
-                   Message = ex.Message
-               };
+                return new RefreshTokenModel
+                {
+                    IsSuccess = false,
+                    Message = "This token hasn't expired yet"
+                };
             }
+
+            var exitedToken = await _unitOfWork.RefreshTokenRepository.ExitedToken(model.RefreshToken);
+            if (exitedToken == null)
+            {
+                return new RefreshTokenModel
+                {
+                    IsSuccess = false,
+                    Message = "This refresh token does not exist"
+                };
+            }
+
+            if (exitedToken.IsUsed)
+            {
+                return new RefreshTokenModel
+                {
+                    IsSuccess = false,
+                    Message = "Refresh token has been used"
+                };
+            }
+
+            if (exitedToken.IsRevoked)
+            {
+                return new RefreshTokenModel
+                {
+                    IsSuccess = false,
+                    Message = "Refresh token has been revoked"
+                };
+            }
+
+            var jti = principal.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
+            if (exitedToken.JwtId != jti)
+            {
+                return new RefreshTokenModel
+                {
+                    IsSuccess = false,
+                    Message = "This refresh token does not match this JWT token"
+                };
+            }
+
+            exitedToken.IsRevoked = true;
+            exitedToken.IsUsed = true;
+            await _unitOfWork.RefreshTokenRepository.UpdateAsync(exitedToken);
+            _unitOfWork.Save();
+
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(exitedToken.UserId);
+            var mapperUser = _mapper.Map<UserModel>(user);
+            var newToken = await GenerateTokenString(mapperUser);
+
+            return new RefreshTokenModel
+            {
+                IsSuccess = true,
+                Message = "Create new token success"
+            };
         }
         private DateTime ConvertUnixTimeToDateTime(long unixTime)
         {
-            var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dateTime = dateTime.AddSeconds(unixTime).ToUniversalTime();
-            return dateTime;
+            var dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(unixTime);
+            return dateTimeOffset.UtcDateTime;
         }
 
         public async Task<bool> Verify(string token)
@@ -263,6 +249,42 @@ namespace Infrastructure.Persistence.Service
                 Message = "Profile updated successfully.",
                 Data = user
             };
+        }
+
+        private (ClaimsPrincipal principal, JwtSecurityToken jwtSecurityToken, string errorMessage) ValidateToken(string token)
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            var secretKeyBytes = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
+            var paramTokenValid = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+                ClockSkew = TimeSpan.Zero,
+                ValidateLifetime = false
+            };
+
+            try
+            {
+                var principal = jwtTokenHandler.ValidateToken(token, paramTokenValid, out var securityToken);
+
+                if (securityToken is JwtSecurityToken jwtSecurityToken)
+                {
+                    var result = jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase);
+                    if (!result)
+                    {
+                        return (null, null, "Invalid alg token");
+                    }
+                    return (principal, jwtSecurityToken, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                return (null, null, ex.Message);
+            }
+
+            return (null, null, "Invalid token");
         }
     }
 

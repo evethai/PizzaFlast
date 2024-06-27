@@ -27,6 +27,8 @@ namespace Infrastructure
                 options.UseSqlServer(connectionString);
             });
 
+            //Declare Middleware
+            services.AddScoped<TokenValidationMiddleware>();
             //Declare UnitOfWork
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 

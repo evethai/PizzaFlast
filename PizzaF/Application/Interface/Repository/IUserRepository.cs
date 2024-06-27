@@ -15,6 +15,5 @@ namespace Application.Interface.Repository
         Task<bool> RegisterUser(RegisterModel loginModel);
         Task<bool> Verify(string token);
         Task<User> UpdateUserProfile(ProfilePutModel model);
-        Task<bool> Logout(string token);
     }
 }

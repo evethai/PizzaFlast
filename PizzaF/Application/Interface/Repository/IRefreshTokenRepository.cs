@@ -10,5 +10,7 @@ namespace Application.Interface.Repository
     public interface IRefreshTokenRepository : IGenericRepository<RefreshToken>
     {
         Task<RefreshToken> ExitedToken(string refreshToken);
+        Task<RefreshToken> GetByJwtIdAsync(string jwtId);
+        Task<bool> IsTokenRevokedAsync(string jwtId);
     }
 }

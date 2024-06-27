@@ -4,6 +4,7 @@ using Domain.Model.RefreshToken;
 using Domain.Model.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Api.Controllers
 {
@@ -163,11 +164,12 @@ namespace Api.Controllers
         {
             try
             {
-                var result = await _userService.Logout(token);
-                if (!result)
+                var result = await _userService.RevokeToken(token);
+                if (!result.IsSuccess)
                 {
                     return BadRequest("token is not valid");
                 }
+
                 return Ok("Logout successful!");
             }
             catch (Exception ex)

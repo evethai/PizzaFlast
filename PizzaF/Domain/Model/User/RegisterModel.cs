@@ -11,11 +11,9 @@ namespace Domain.Model.User
     public class RegisterModel
     {
         [Required]
-        [FromForm(Name = "first_name")]
-        public string? FirstName { get; set; }
-        [Required]
-        [FromForm(Name = "last_name")]
-        public string? LastName { get; set; }
+        [FromForm(Name = "name")]
+        public string? Name { get; set; }
+
         [Required]
         [FromForm(Name = "email")]
         [EmailAddress]
@@ -23,5 +21,11 @@ namespace Domain.Model.User
         [Required]
         [FromForm(Name = "password")]
         public string Password { get; set; } = null!;
+        [Required]
+        [FromForm(Name = "phone")]
+        public string Phone { get; set; } = null!;
+        [Required]
+        [FromForm(Name = "address")]
+        public string Address { get; set; } = null!;
     }
 }
