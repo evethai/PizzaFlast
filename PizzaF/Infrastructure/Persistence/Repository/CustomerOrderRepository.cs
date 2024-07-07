@@ -28,6 +28,7 @@ namespace Infrastructure.Persistence.Repository
             try
             {
                 var totalPrice = CalculateTotalPrice(customerOrder);
+                string content = "";
                 var customerOrderEntity = new CustomerOrder
                 {
                     UserId = customerOrder.UserId,
@@ -38,6 +39,12 @@ namespace Infrastructure.Persistence.Repository
                 var order = await _context.CustomerOrders.AddAsync(customerOrderEntity);
                 _context.SaveChanges();
 
+                var customer = _context.Users.FirstOrDefault(x => x.UserId == customerOrder.UserId);
+                if (customer != null)
+                {
+                    content ="Customer name is: "+ customer.Name + ", address is: " + customer.Address + ", phone number is: " + customer.Phone + ", has order: ";
+                }
+
                 if (customerOrder.customerDrinks != null)
                 {
                     foreach (var item in customerOrder.customerDrinks)
@@ -46,8 +53,16 @@ namespace Infrastructure.Persistence.Repository
                         customerDrink.OrderId = order.Entity.OrderId;
                         await _context.CustomerDrinks.AddAsync(customerDrink);
                         _context.SaveChanges();
+
+                        //find in for of Drink
+                        var drink = _context.Drinks.FirstOrDefault(p => p.DrinkId == item.DrinkId);
+                        if (drink != null)
+                        {
+                            content += item.Quantity + " " + drink.Name + ", ";
+                        }
                     }
                 }
+
                 if (customerOrder.customerPizzas != null)
                 {
                     foreach (var item in customerOrder.customerPizzas)
@@ -56,8 +71,39 @@ namespace Infrastructure.Persistence.Repository
                         customerPizza.OrderId = order.Entity.OrderId;
                         await _context.CustomerPizzas.AddAsync(customerPizza);
                         _context.SaveChanges();
+
+                        //find in for of Pizza
+                        var pizza = _context.Pizzas.FirstOrDefault(p => p.PizzaId == item.PizzaId);
+                        if (pizza != null)
+                        {
+                            content += item.Quantity + " " + pizza.Name + ", ";
+                        }
+                        //find in for of Size
+                        var size = _context.Sizes.FirstOrDefault(p => p.SizeId == item.SizeId);
+                        if (size != null)
+                        {
+                            content += size.Name + ", ";
+                        }
+                        //find in for of Topping
+                        var topping = _context.Toppings.FirstOrDefault(p => p.ToppingId == item.ToppingId);
+                        if (topping != null)
+                        {
+                            content += topping.Name + ", ";
+                        }
                     }
                 }
+
+                content += "total price: " + totalPrice;
+                //create notification
+                var notification = new Notification
+                {
+                    UserId = customerOrder.UserId,
+                    Content = content,
+                    ReceivedAt = DateTime.UtcNow,
+                    Status = NotiStatus.Unread
+                };
+                await _context.Notifications.AddAsync(notification);
+                _context.SaveChanges();
 
                 return new CustomerOrderModel
                 {
@@ -126,6 +172,24 @@ namespace Infrastructure.Persistence.Repository
             {
                 return new BillModel();
             }
+        }
+
+        public async Task<IEnumerable<CusOrderHistoryModel>> GetHistoryOrderByUserId(int userId)
+        {
+            var listOrder = _context.CustomerOrders
+                .Where(p => p.UserId == userId && p.Status == OrderStatus.Completed)
+                .Include(p => p.CustomerPizzas)
+                .ThenInclude(cp => cp.Pizza)
+                .Select(order => new CusOrderHistoryModel
+                {
+                    OrderId = order.OrderId,
+                    TotalAmount = order.TotalAmount,
+                    OrderDate = order.OrderDate,
+                    Image = order.CustomerPizzas.Select(cp => cp.Pizza.Image).FirstOrDefault()
+                })
+                .ToList();
+
+            return listOrder;
         }
 
         private decimal CalculateTotalPrice(CustomerOrderPostModel customerOrder)

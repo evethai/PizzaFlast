@@ -43,6 +43,7 @@ namespace Infrastructure
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<ICustomerOrderRepository, CustomerOrderRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
 
             //Declare Service
             services.AddScoped<IPizzaService, PizzaService>();
@@ -53,7 +54,8 @@ namespace Infrastructure
             services.AddScoped<ICustomerDrinkService, CustomerDrinkService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMessageService, MessageService>();
- 
+            services.AddScoped<INotificationService, NotificationService>();
+
 
 
 

@@ -3,6 +3,7 @@ using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Model;
+using Domain.Model.Dashboard;
 using Domain.Model.RefreshToken;
 using Domain.Model.User;
 using Microsoft.Extensions.Configuration;
@@ -128,15 +129,10 @@ namespace Infrastructure.Persistence.Service
         }
 
 
-        public async Task<bool> RegisterUser(RegisterModel model)
+        public async Task<int> RegisterUser(RegisterModel model)
         {
-            var user = await _unitOfWork.UserRepository.RegisterUser(model);
-            if(user == false )
-            {
-                return false;
-            }
-            return true;
-
+            var userId = await _unitOfWork.UserRepository.RegisterUser(model);
+            return userId;
         }
 
         public async Task<RefreshTokenModel> CreateRefreshToken(ResponseTokenModel model)
@@ -285,6 +281,26 @@ namespace Infrastructure.Persistence.Service
             }
 
             return (null, null, "Invalid token");
+        }
+
+        public async Task<UsersResponseModel> GetListUserAsync(UsersSearchModel searchModel)
+        {
+            var (filter, orderBy) = _unitOfWork.UserRepository.BuildFilterAndOrderBy(searchModel);
+            var users = await _unitOfWork.UserRepository.GetByConditionAsync(filter, orderBy, pageIndex: searchModel.currentPage, pageSize: searchModel.pageSize);
+            var total = await _unitOfWork.UserRepository.CountAsync(filter);
+            var listUser = _mapper.Map<List<UserModel>>(users);
+            return new UsersResponseModel
+            {
+                total = total,
+                currentPage = searchModel.currentPage,
+                users = listUser,
+            };
+        }
+
+        public async Task<DashboardModel> getDashBoard()
+        {
+            var result = await _unitOfWork.UserRepository.getDashBoard();
+            return result;
         }
     }
 

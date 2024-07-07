@@ -11,9 +11,11 @@ namespace Api.Controllers
     public class CustomerOrderController : ControllerBase
     {
         private readonly ICustomerOrderService _customerOrderService;
-        public CustomerOrderController(ICustomerOrderService customerOrderService)
+        private readonly INotificationService _notificationService;
+        public CustomerOrderController(ICustomerOrderService customerOrderService, INotificationService notificationService)
         {
             _customerOrderService = customerOrderService;
+            _notificationService = notificationService;
         }
 
         [HttpPost]
@@ -50,6 +52,19 @@ namespace Api.Controllers
             try
             {
                 var result = await _customerOrderService.UpdateOrder(id, status);
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("history/{userId}")]
+        public async Task<IActionResult> GetHistoryOrderByUserId(int userId)
+        {
+            try
+            {
+                var result = await _customerOrderService.GetHistoryOrderByUserId(userId);
                 return Ok(result);
             }
             catch (System.Exception ex)

@@ -17,7 +17,6 @@ namespace Api.Controllers
             _drinkService = drinkService;
         }
 
-        [Authorize(Roles = "2")]
         [HttpGet]
         public async Task<IActionResult> GetListDrinkAsync([FromQuery] DrinkSearchModel searchModel)
         {

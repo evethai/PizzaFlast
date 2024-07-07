@@ -17,5 +17,13 @@ namespace Domain.Model.User
         public DateTime? VerifiedAt { get; set; }
     }
 
+    public class UsersResponseModel
+    {
+        public int? total { get; set; }
+        public int? currentPage { get; set; }
+        public List<UserModel> users { get; set; }  
+    }
+
+
 
 }

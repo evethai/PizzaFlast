@@ -19,6 +19,7 @@ namespace Application.Interface
         IRefreshTokenRepository RefreshTokenRepository { get; }
         IMessageRepository MessageRepository { get; }
         ICustomerOrderRepository CustomerOrderRepository { get; }
+        INotificationRepository NotificationRepository { get; }
 
         int Save();
     }

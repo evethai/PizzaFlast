@@ -14,5 +14,6 @@ namespace Application.Interface.Service
         Task<ResponseModel> CreateOrder(CustomerOrderPostModel model);
         Task<BillModel> GetBillByOrderId(int id);
         Task<ResponseModel> UpdateOrder(int orderId, OrderStatus status);
+        Task<IEnumerable<CusOrderHistoryModel>> GetHistoryOrderByUserId(int userId);
     }
 }

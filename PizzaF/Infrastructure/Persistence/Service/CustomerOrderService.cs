@@ -39,6 +39,12 @@ namespace Infrastructure.Persistence.Service
             return bill;
         }
 
+        public async Task<IEnumerable<CusOrderHistoryModel>> GetHistoryOrderByUserId(int userId)
+        {
+            var orderList = await _unitOfWork.CustomerOrderRepository.GetHistoryOrderByUserId(userId);
+            return orderList;
+        }
+
         public async Task<ResponseModel> UpdateOrder(int orderId, OrderStatus status)
         {
             var order = await _unitOfWork.CustomerOrderRepository.GetByIdAsync(orderId);

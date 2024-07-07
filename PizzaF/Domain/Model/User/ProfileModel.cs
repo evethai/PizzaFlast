@@ -39,7 +39,7 @@ namespace Domain.Model.User
         public string? Address { get; set; }
         [FromForm(Name = "phone")]
         [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\+?[1-9]\d{1,14}$", ErrorMessage = "Phone is not valid")]
+        [RegularExpression(@"^\+?[0-9]\d{1,14}$", ErrorMessage = "Phone is not valid")]
         public string? Phone { get; set; }
         [FromForm(Name = "profile_pic")]
         public string? ProfilePic { get; set; }

@@ -12,5 +12,7 @@ namespace Application.Interface.Repository
     {
         Task<CustomerOrderModel> CreateCustomerOrder(CustomerOrderPostModel customerOrder);
         Task<BillModel> GetCustomerOrderById(int id);
+        Task<IEnumerable<CusOrderHistoryModel>> GetHistoryOrderByUserId(int userId);
+
     }
 }

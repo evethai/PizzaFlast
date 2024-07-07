@@ -9,6 +9,6 @@ namespace Application.Interface.Service
 {
     public interface IEmailService
     {
-        Task<bool> SendEmail(EmailModel request);
+        Task<bool> SendEmail(int userId);
     }
 }

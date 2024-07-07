@@ -1,4 +1,6 @@
 ﻿using Application.Interface.Service;
+using Domain.Entity;
+using Domain.Model;
 using Domain.Model.Email;
 using Domain.Model.RefreshToken;
 using Domain.Model.User;
@@ -19,6 +21,20 @@ namespace Api.Controllers
         {
             _userService = userService;
             _emailService = emailService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetListUserAsync([FromQuery] UsersSearchModel searchModel)
+        {
+            try
+            {
+                var result = await _userService.GetListUserAsync(searchModel);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("login")]
@@ -59,12 +75,17 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _userService.RegisterUser(model);
-                if (result == false)
+                var userId = await _userService.RegisterUser(model);
+                if (userId <= 0)
                 {
                     return BadRequest("Account with email has exited!!!");
                 }
-                return Ok("Register success");
+                var mail = await _emailService.SendEmail(userId);
+                if (mail == false)
+                {
+                    return BadRequest("Send mail failed");
+                }
+                return Ok(new ResponseModel { IsSuccess = true, Message= "Sign Up Success! Check mail to verify" });
             }
             catch (Exception ex)
             {
@@ -109,11 +130,11 @@ namespace Api.Controllers
         }
 
         [HttpPost("send-mail-verify")]
-        public  async Task<IActionResult> SendMailToVerify(EmailModel model)
+        public  async Task<IActionResult> SendMailToVerify(int userId)
         {
             try
             {
-                var result =  await _emailService.SendEmail(model);
+                var result =  await _emailService.SendEmail(userId);
                 if(result == false)
                 {
                     return BadRequest("Send mail failed");
@@ -158,7 +179,6 @@ namespace Api.Controllers
             }
         }
 
-        //logout
         [HttpPost("logout")]
         public async Task<IActionResult> Logout(string token)
         {
@@ -177,5 +197,20 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("dashboard")]
+        public async Task<IActionResult> GetDashBoard()
+        {
+            try
+            {
+                var result = await _userService.getDashBoard();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
